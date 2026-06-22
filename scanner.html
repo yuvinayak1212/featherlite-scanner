@@ -91,6 +91,32 @@
   // had selected before sending the operator here, so they aren't lost
   // when we redirect back.
   var incomingParams = new URLSearchParams(window.location.search);
+
+  // TEMP DIAGNOSTIC: show exactly what params this page received, so we can
+  // confirm whether ws/dept/shift/op actually arrived from the Apps Script
+  // form's redirect or were lost before getting here.
+  (function showIncomingParamsDiagnostic() {
+    var lines = [];
+    lines.push('Full URL received: ' + window.location.href);
+    ['ws', 'dept', 'shift', 'op'].forEach(function (key) {
+      lines.push(key + ': "' + (incomingParams.get(key) || '(missing)') + '"');
+    });
+    var box = document.createElement('div');
+    box.style.position = 'fixed';
+    box.style.top = '60px';
+    box.style.left = '8px';
+    box.style.right = '8px';
+    box.style.zIndex = '999';
+    box.style.background = 'rgba(0,0,0,0.85)';
+    box.style.color = '#9fe3b8';
+    box.style.fontSize = '11px';
+    box.style.padding = '8px';
+    box.style.borderRadius = '6px';
+    box.style.wordBreak = 'break-all';
+    box.innerHTML = lines.join('<br>');
+    document.body.appendChild(box);
+  })();
+
   function carryThroughParamsString() {
     var p = new URLSearchParams();
     ['ws', 'dept', 'shift', 'op'].forEach(function (key) {
