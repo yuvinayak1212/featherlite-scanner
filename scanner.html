@@ -143,9 +143,19 @@
         scanLoop();
       })
       .catch(function (err) {
+        var diag = '';
+        diag += 'Error name: ' + (err && err.name ? err.name : 'unknown') + '<br>';
+        diag += 'Error message: ' + (err && err.message ? err.message : String(err)) + '<br>';
+        diag += 'Page URL: ' + window.location.href + '<br>';
+        diag += 'Is secure context: ' + window.isSecureContext + '<br>';
+        diag += 'In iframe: ' + (window.top !== window.self) + '<br>';
+        diag += 'User agent: ' + navigator.userAgent;
+
         showCenterMessage(
-          'Could not access camera:<br>' + (err && err.message ? err.message : err) +
-          '<br><br><button class="retry-btn" onclick="startCamera()">Try Again</button>' +
+          '<div style="font-size:13px; text-align:left; background:#1a1a1a; padding:14px; border-radius:8px; word-break:break-all;">' +
+          diag +
+          '</div>' +
+          '<br><button class="retry-btn" onclick="startCamera()">Try Again</button>' +
           '<br><button class="retry-btn" style="margin-top:10px;background:#444;" onclick="goBackManual()">Enter Manually Instead</button>'
         );
       });
