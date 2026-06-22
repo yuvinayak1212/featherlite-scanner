@@ -92,31 +92,6 @@
   // when we redirect back.
   var incomingParams = new URLSearchParams(window.location.search);
 
-  // TEMP DIAGNOSTIC: show exactly what params this page received, so we can
-  // confirm whether ws/dept/shift/op actually arrived from the Apps Script
-  // form's redirect or were lost before getting here.
-  (function showIncomingParamsDiagnostic() {
-    var lines = [];
-    lines.push('Full URL received: ' + window.location.href);
-    ['ws', 'dept', 'shift', 'op'].forEach(function (key) {
-      lines.push(key + ': "' + (incomingParams.get(key) || '(missing)') + '"');
-    });
-    var box = document.createElement('div');
-    box.style.position = 'fixed';
-    box.style.top = '60px';
-    box.style.left = '8px';
-    box.style.right = '8px';
-    box.style.zIndex = '999';
-    box.style.background = 'rgba(0,0,0,0.85)';
-    box.style.color = '#9fe3b8';
-    box.style.fontSize = '11px';
-    box.style.padding = '8px';
-    box.style.borderRadius = '6px';
-    box.style.wordBreak = 'break-all';
-    box.innerHTML = lines.join('<br>');
-    document.body.appendChild(box);
-  })();
-
   function carryThroughParamsString() {
     var p = new URLSearchParams();
     ['ws', 'dept', 'shift', 'op'].forEach(function (key) {
@@ -169,19 +144,9 @@
         scanLoop();
       })
       .catch(function (err) {
-        var diag = '';
-        diag += 'Error name: ' + (err && err.name ? err.name : 'unknown') + '<br>';
-        diag += 'Error message: ' + (err && err.message ? err.message : String(err)) + '<br>';
-        diag += 'Page URL: ' + window.location.href + '<br>';
-        diag += 'Is secure context: ' + window.isSecureContext + '<br>';
-        diag += 'In iframe: ' + (window.top !== window.self) + '<br>';
-        diag += 'User agent: ' + navigator.userAgent;
-
         showCenterMessage(
-          '<div style="font-size:13px; text-align:left; background:#1a1a1a; padding:14px; border-radius:8px; word-break:break-all;">' +
-          diag +
-          '</div>' +
-          '<br><button class="retry-btn" onclick="startCamera()">Try Again</button>' +
+          'Could not access camera:<br>' + (err && err.message ? err.message : err) +
+          '<br><br><button class="retry-btn" onclick="startCamera()">Try Again</button>' +
           '<br><button class="retry-btn" style="margin-top:10px;background:#444;" onclick="goBackManual()">Enter Manually Instead</button>'
         );
       });
